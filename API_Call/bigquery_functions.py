@@ -6,20 +6,21 @@ def entries_to_remove(entries, the_dict):
         if key in the_dict:
             the_dict.pop(key)
             
-def insert_rows_to_tables(credentials,
-                          project_id,
-                          dataset_id,
-                          table_id,
-                          insert_rows):
-    '''
-    insert_rows has to be a list of tuples.
-    '''
+def insert_rows_to_bigquery(credentials,
+                            project_id,
+                            dataset_id,
+                            table_id,
+                            insert_rows):
     # Instantiates a client
-    client = bigquery.Client(credentials= credentials,project=project_id)
+    bigquery_client = bigquery.Client(credentials= credentials, project=project_id)
 
-    query = f"""
-            INSERT INTO {dataset_id}.{table_id}
-            VALUES {insert_rows}
-            """
+    # Prepares a reference to the dataset
+    dataset_ref = bigquery_client.dataset(dataset_id)
 
-    query_job = client.query(query)
+    table_ref = dataset_ref.table(table_id)
+    table = bigquery_client.get_table(table_ref)  # API call
+
+    rows_to_insert = insert_rows
+    errors = bigquery_client.insert_rows(table, rows_to_insert)  # API request
+    print(errors)
+    assert errors == []
