@@ -7,7 +7,7 @@ def get_api_request(url,headers,request_name=''):
     '''
     r = requests.get(url,headers=headers)
     if r.status_code == 200:
-        print(f'{request_name} Request Successful')
+#        print(f'{request_name} Request Successful')
         
         r_json = r.json()
         return r_json
@@ -66,7 +66,7 @@ def get_match_stats(username,match_id,headers):
     for participant in match_stats['participantIdentities']:
         if participant['player']['summonerName'] == username:
             pid = participant['participantId']
-            stats = match_stats['participants'][pid]['stats']
+            stats = match_stats['participants'][pid -1]['stats']
             stats['matchID'] = str(match_id)
             stats['summonername'] = str(username)
             stats['gameCreationDate'] = match_stats['gameCreation']
