@@ -65,9 +65,12 @@ def get_match_stats(username,match_id,headers):
     #check all the participants in the match for the stats of the specified user
     for participant in match_stats['participantIdentities']:
         if participant['player']['summonerName'] == username:
-            pid = participant['participantId']
-            stats = match_stats['participants'][pid -1]['stats']
+            pid = participant['participantId'] -1
+            stats = match_stats['participants'][pid]['stats']
             stats['matchID'] = str(match_id)
             stats['summonername'] = str(username)
             stats['gameCreationDate'] = match_stats['gameCreation']
+            stats['gameDuration'] = match_stats['gameDuration']
+            stats['gameType'] = match_stats['gameType']
+            stats['gameMode'] = match_stats['gameMode']
     return stats
